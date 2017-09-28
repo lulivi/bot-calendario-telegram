@@ -1,5 +1,13 @@
 # Bot Calendario de Telegram
 
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Descripción](#descripcin)
+- [Servicios](#servicios)
+- [Licencia](#licencia)
+
+<!-- /TOC -->
+
 ## Descripción
 
 Este proyecto consiste en la creación y desplegado de un bot de telegram multiuso, especialmente centrado en el manejo de un calendario de eventos añadidos por el usuario. Su principal misión será notificar las fechas de entregas de prácticas o exámenes. Un posible borrador de las acciones que podrá llevar a cabo el bot podría ser:
