@@ -1,8 +1,13 @@
 # Bot Calendario de Telegram
 
-<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+* [![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram)
+* [![license](https://img.shields.io/github/license/lulivi/bot-calendario-telegram.svg)](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
 
-- [Descripción](#descripcin)
+# Índice
+
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+
+- [Descripción](#descripción)
 - [Servicios](#servicios)
 - [Licencia](#licencia)
 
@@ -15,7 +20,7 @@ Este proyecto consiste en la creación y desplegado de un bot de telegram multiu
 * Añadir nuevos eventos
 * Modificar eventos
 * Eliminar eventos
-* CConfigurar cuándo debe notificar de los eventos
+* Configurar cuándo debe notificar de los eventos
 
 ## Servicios
 
