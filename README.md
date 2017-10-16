@@ -1,19 +1,19 @@
 # Bot Calendario de Telegram
 
-* [![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram)
-* [![license](https://img.shields.io/github/license/lulivi/bot-calendario-telegram.svg)](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
+## Build
+[![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram)
 
-# Índice
+## Index
 
-<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+<!-- TOC depthFrom:3 depthTo:6 withLinks:1 updateOnSave:1 orderedList:1 -->
 
-- [Descripción](#descripción)
-- [Servicios](#servicios)
-- [Licencia](#licencia)
+1. [Description](#description)
+2. [Services](#services)
+3. [License](#license)
 
 <!-- /TOC -->
 
-## Descripción
+### Description
 
 Este proyecto consiste en la creación y desplegado de un bot de telegram multiuso, especialmente centrado en el manejo de un calendario de eventos añadidos por el usuario. Su principal misión será notificar las fechas de entregas de prácticas o exámenes. Un posible borrador de las acciones que podrá llevar a cabo el bot podría ser:
 
@@ -22,7 +22,7 @@ Este proyecto consiste en la creación y desplegado de un bot de telegram multiu
 * Eliminar eventos
 * Configurar cuándo debe notificar de los eventos
 
-## Servicios
+### Services
 
 Los posibles servicios en los que se basará este bot serán:
 
@@ -31,6 +31,6 @@ Los posibles servicios en los que se basará este bot serán:
 * Cloud: Será desplegado en [Azure](https://azure.microsoft.com/en-us/)
 * Base de datos: [Mysql](https://www.mysql.com/)
 
-## Licencia
+### License
 
-[Enlace a la Licencia](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/lulivi/bot-calendario-telegram.svg)](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
