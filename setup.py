@@ -12,7 +12,7 @@ requirements = []
 
 setup(
     name='bot-calendario-telegram',
-    version='0.2',
+    version='0.3',
     description='A telegram bot to keep every objective up to date.',
     long_description=long_description,
     license="GPLv3",
