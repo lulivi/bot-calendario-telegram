@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>reminder.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>reminder.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Remainder python module.</p>
+<p>Checks in a data base when an event needs to be reminded.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>External imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">sqlite3</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <h3><span id="reminder-class" href="reminder-class"> Reminder Class </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Reminder</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Checks and modifies a data base for geting and saving events.</p>
+<p>Methods:</p>
+<ul>
+<li>save_event</li>
+<li>get_event</li>
+<li>delete_event</li>
+<li>next_event</li>
+<li>get_all_events</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">__db_connection</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">__db_cursor</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">__db_file</span> <span class="o">=</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <h3><span id="constructor" href="constructor"> Constructor </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Constructor.</p>
+<p>Asign the data base path to a private variable.</p>
+<p>Args:</p>
+<ul>
+<li>db_file - Data base path</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">__db_file</span> <span class="o">=</span> <span class="n">db_file</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <h3><span id="open-connection" href="open-connection"> Open connection </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_open_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Connect to the database.</p>
+<p>Creates a cursor from the connection to iterate and execute query
+sentences.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__db_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span><span class="o">.</span><span class="n">row_factory</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Row</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <h3><span id="close-connection" href="close-connection"> Close connection </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_close_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Close the connection.</p>
+<p>Simple function to close the connection.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <h3><span id="save-event" href="save-event"> Save event </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">save_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">event_date</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Save the event in the data base.</p>
+<p>Perform a query sentence to save the event in the data base.</p>
+<p>Args:</p>
+<ul>
+<li>id_event - ID of the event</li>
+<li>event_date - Reminder date of the event</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li>-1 If there was any exception</li>
+<li>0 If everything were correct</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open_connection</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;INSERT INTO EVENTS VALUES(?, ?)&#39;</span><span class="p">,</span>
+                                     <span class="p">(</span><span class="n">id_event</span><span class="p">,</span> <span class="n">event_date</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">preserve</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_connection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <h3><span id="get-event" href="get-event"> Get event </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_event</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Get the event from the data base.</p>
+<p>Perform a query sentence to get the event from the data base.</p>
+<p>Args:</p>
+<ul>
+<li>id_event - ID of the event</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li>-1 If there was any exception</li>
+<li>date_event If everything were correct</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open_connection</span><span class="p">()</span>
+
+            <span class="n">selected_event</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">selected_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s1">&#39;SELECT EventDate FROM EVENTS WHERE EventId = ?&#39;</span><span class="p">,</span>
+                <span class="n">id_event</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_connection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">selected_event</span><span class="p">[</span><span class="s1">&#39;EventDate&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <h3><span id="delete-event" href="delete-event"> Delete event </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">delete_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Delete event from Database.</p>
+<p>Perform a query sentence to remove a touple from the data base.</p>
+<p>Args:</p>
+<ul>
+<li>id_event - ID of the event</li>
+<li>preserve - If it should execute the query (testing purposes)
+DEFAULT: True</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li>-1 If there was any exception</li>
+<li>0 If everything were correct</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open_connection</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s1">&#39;DELETE FROM EVENTS WHERE EventId = ?&#39;</span><span class="p">,</span> <span class="n">id_event</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">preserve</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__db_connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_connection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <h3><span id="next-event" href="next-event"> Next event </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">next_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Nearest event.</p>
+<p>Perform a query sentence to get the nearest event from the data base.</p>
+<p>Returns:</p>
+<ul>
+<li>-1 If there was any exception</li>
+<li>next_event If everything was fine</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open_connection</span><span class="p">()</span>
+            <span class="n">next_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s1">&#39;SELECT * FROM EVENTS ORDER BY EventDate&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_connection</span><span class="p">()</span>
+
+            <span class="n">dict_next_event</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">next_event</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dict_next_event</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <h3><span id="get-all-events" href="get-all-events"> Get all events </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_all_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_sorted</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Return all events sorted by date.</p>
+<p>Perform a query sentence to get every event from the data base.</p>
+<p>Args:</p>
+<ul>
+<li>date_sorted - If want the results sorted by date DEFAULT: True</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li>-1 If there was any exception</li>
+<li>all_events If everything was fine</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open_connection</span><span class="p">()</span>
+            <span class="n">all_events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__db_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s1">&#39;SELECT * from EVENTS ORDER BY EventDate;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_connection</span><span class="p">()</span>
+
+            <span class="n">dict_all_events</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">all_events</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dict_all_events</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
