@@ -12,76 +12,138 @@ import unittest
 # Local imports
 import __init__ as init
 from reminder import Reminder
-
+import peewee
+import json
+import sqlite3
+import os
 assert init
+
+db_name = None
+reminder_object = None
 
 
 # === Clase test ===
 class ReminderTest(unittest.TestCase):
     """Reminder test class."""
 
-    __db_file = '../data/test_reminder.db'
+    def test_save_update_delete_event(self):
+        """Check for exceptions in the insertion/update/deletion."""
+        # Insert a new event
+        result_insert = reminder_object.save_event('test_event',
+                                                   '2000/01/01 00:00:00')
+        # Update the previuosly inserted event
+        result_update = reminder_object.update_event('test_event',
+                                                     '2049/01/01 00:00:00')
 
-    def test_save_event(self):
-        """Check if there are any exceptions in the insertion."""
-        remind = Reminder(self.__db_file)
+        # Check if the returning of the inserti is the event in essence
+        self.assertEqual(result_insert, {'test_event': '2000/01/01 00:00:00'},
+                         'Not the correct return')
+        # Check if there was one line updated
+        self.assertEqual(result_update, 1, 'No event updated')
 
-        result = remind.save_event(
-            'test_event', '2000-01-01 00:00:00', preserve=False)
+        # Check if it is possible to insert another event with the same ID
+        with self.assertRaises(peewee.IntegrityError):
+            reminder_object.save_event('test_event', '2049/01/01 00:00:00')
 
-        self.assertEqual(result, 0, 'No exceptions')
+        # Delete the previous inserted event
+        result = reminder_object.delete_event('test_event')
+        self.assertEqual(result, 1, 'Not one row deleted')
 
     def test_get_event(self):
         """Check if it returns a correct event."""
-        remind = Reminder(self.__db_file)
+        # Test existing event
+        result = reminder_object.get_event('1')
+        # Test non existing event
+        retult_2 = reminder_object.get_event('non_existent_event')
 
-        result = remind.get_event('1')
-
-        self.assertFalse(result == '', 'It exists')
-        self.assertFalse(result == -1, 'No exceptions')
-        self.assertEqual(result, '2017-10-18 12:30:00', 'It is correct')
-
-    def test_delete_event(self):
-        """Check if the deletion of an event raises any exceptions."""
-        remind = Reminder(self.__db_file)
-
-        result = remind.delete_event('1', preserve=False)
-
-        self.assertEqual(result, 0, 'Deleted without errors')
+        # Check if it returns the expected event
+        self.assertEqual(result, {'1': '2017/10/18 12:30'},
+                         'Didn\'t return the correct event')
+        # Check if it returns an empty dictionary
+        self.assertEqual(retult_2, {}, 'Non existent event is not empty')
 
     def test_next_event(self):
         """Check if the next event is the first on a sorted list."""
-        remind = Reminder(self.__db_file)
-        next_event_date = {"EventId": "5", "EventDate": "2017-10-05 10:40:00"}
+        # Test next event
+        result = reminder_object.next_event()
 
-        result = remind.next_event()
-
-        self.assertFalse(result == {}, 'Not empty')
-        self.assertEqual(result, next_event_date, 'Correct output')
+        # Should return the next event order by date
+        self.assertEqual(result, {'4': '2016/03/25 16:45'}, 'Incorrect output')
 
     def test_get_all_events(self):
         """Check if there are any exceptions in the select."""
-        remind = Reminder(self.__db_file)
+        # The expected output
         all_events_json = {
-            "1": "2017-10-18 12:30:00",
-            "2": "2017-10-20 14:15:00",
-            "3": "2017-10-25 16:45:00",
-            "5": "2017-10-05 10:40:00"
-        }
-        all_events_sorted_json = {
-            "5": "2017-10-05 10:40:00",
-            "1": "2017-10-18 12:30:00",
-            "2": "2017-10-20 14:15:00",
-            "3": "2017-10-25 16:45:00"
+            "4": "2016/03/25 16:45",
+            "5": "2017/10/05 10:40",
+            "1": "2017/10/18 12:30",
+            "2": "2017/10/20 14:15",
+            "3": "2017/10/25 16:45"
         }
 
-        result1 = remind.get_all_events()
-        result2 = remind.get_all_events(date_sorted=False)
+        # Test get all events
+        result = reminder_object.get_all_events()
 
-        self.assertEqual(result1, all_events_sorted_json,
-                         'Date sorted sorted correct output')
-        self.assertEqual(result2, all_events_json,
-                         'No date sorted sorted correct output')
+        # Should return the same as `all_events_json`
+        self.assertEqual(result, all_events_json,
+                         'Date sorting is not correct')
+
+
+def setUpModule():
+    """Set up Module method."""
+    global reminder_object, db_name
+
+    # Name of the database
+    db_name = '../data/test_reminder_database.db'
+
+    # Conexión
+    conn = sqlite3.connect(db_name)
+
+    # Cursor
+    c = conn.cursor()
+
+    # Drop table if already exists
+    c.execute("DROP TABLE IF EXISTS 'event'")
+
+    # Create table
+    c.execute('''CREATE TABLE event(
+        id INTEGER PRIMARY KEY,
+        id_event varchar(255) NOT NULL UNIQUE,
+        date_event datetime NOT NULL
+    );''')
+
+    # Larger example that inserts many records at a time
+    with open('../data/test_reminder_data.json', 'r') as fp:
+        test_data = json.load(fp)
+
+    test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
+
+    # Insert the test data into the database
+    c.executemany('INSERT INTO event (id_event, date_event) VALUES (?, ?)',
+                  test_data)
+
+    # Save (commit) the changes
+    conn.commit()
+
+    # Close the connection if everything is done
+    conn.close()
+
+    # Create Reminder object, init it and connect to the database
+    reminder_object = Reminder()
+    reminder_object.initialize(db_name)
+    reminder_object.connect()
+
+
+def tearDownModule():
+    """Tear down Module method."""
+    global reminder_object, db_name
+
+    # Close the database connection of reminder_object
+    reminder_object.close()
+
+    # Remove the testing database if it is not in memory
+    if db_name != ':memory:':
+        os.remove(db_name)
 
 
 if __name__ == '__main__':
