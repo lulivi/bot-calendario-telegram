@@ -55,7 +55,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Checks and modifies a database</p>
+      <p>Checks and modifies a database.</p>
 <p>Methods:</p>
 <ul>
 <li>initialize - Initialize the database object.</li>
@@ -198,7 +198,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      <p>Updates an existing event.</p>
+      <p>Update an existing event.</p>
 <p>Performs an update query to to an existing event of the database</p>
 <p>Args:</p>
 <ul>
@@ -303,10 +303,11 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">selected</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                <span class="p">[(</span><span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
-                 <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">id_event</span> <span class="o">==</span> <span class="n">id_event</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()])</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">id_event</span><span class="p">:</span> <span class="n">date_event</span>
+                <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">id_event</span> <span class="o">==</span> <span class="n">id_event</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()</span>
+            <span class="p">}</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">else</span><span class="p">:</span>
@@ -340,10 +341,11 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">selected</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                <span class="p">[(</span><span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
-                 <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">date_event</span><span class="p">)</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()])</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">id_event</span><span class="p">:</span> <span class="n">date_event</span>
+                <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">date_event</span><span class="p">)</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()</span>
+            <span class="p">}</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">else</span><span class="p">:</span>
@@ -378,10 +380,11 @@ event</li>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">events</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                <span class="p">[(</span><span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
-                 <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">date_event</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()])</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">id_event</span><span class="p">:</span> <span class="n">date_event</span>
+                <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">id_event</span><span class="p">,</span> <span class="n">date_event</span> <span class="ow">in</span> <span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">db_model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">date_event</span><span class="p">)</span><span class="o">.</span><span class="n">tuples</span><span class="p">()</span>
+            <span class="p">}</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">else</span><span class="p">:</span>
