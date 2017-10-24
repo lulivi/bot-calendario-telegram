@@ -146,10 +146,11 @@ class Reminder(object):
         * selected - Dictionary of id_event: date_event as key: value
         """
         try:
-            selected = dict(
-                [(id_event, date_event)
-                 for id, id_event, date_event in db_model.Event.select()
-                 .where(db_model.Event.id_event == id_event).tuples()])
+            selected = {
+                id_event: date_event
+                for id, id_event, date_event in db_model.Event.select()
+                .where(db_model.Event.id_event == id_event).tuples()
+            }
         except Exception as e:
             raise
         else:
@@ -167,10 +168,11 @@ class Reminder(object):
         * selected - Dictionary of id_event: date_event as key: value
         """
         try:
-            selected = dict(
-                [(id_event, date_event)
-                 for id, id_event, date_event in db_model.Event.select()
-                 .order_by(db_model.Event.date_event).limit(1).tuples()])
+            selected = {
+                id_event: date_event
+                for id, id_event, date_event in db_model.Event.select()
+                .order_by(db_model.Event.date_event).limit(1).tuples()
+            }
         except Exception as e:
             raise
         else:
@@ -189,10 +191,11 @@ class Reminder(object):
         event
         """
         try:
-            events = dict(
-                [(id_event, date_event)
-                 for id, id_event, date_event in db_model.Event.select()
-                 .order_by(db_model.Event.date_event).tuples()])
+            events = {
+                id_event: date_event
+                for id, id_event, date_event in db_model.Event.select()
+                .order_by(db_model.Event.date_event).tuples()
+            }
         except Exception as e:
             raise
         else:
