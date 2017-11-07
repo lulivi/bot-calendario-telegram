@@ -1,5 +1,7 @@
 """Help tests to find modules to test."""
 
 import sys
+import os
 
-sys.path.append('../bot_calendario_telegram/')
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../bot_calendario_telegram')
