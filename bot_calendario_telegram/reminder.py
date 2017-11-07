@@ -2,7 +2,9 @@
 """
 Remainder python module.
 
-Checks in a data base when an event needs to be reminded.
+Classes:
+
+* Reminder
 """
 
 # External imports
