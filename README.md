@@ -1,19 +1,23 @@
 # Bot Calendario de Telegram
 
-## Build
 [![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram)
 
 ## Index
 
 <!-- TOC depthFrom:3 depthTo:6 withLinks:1 updateOnSave:1 orderedList:1 -->
 
-1. [Description](#description)
-2. [Services](#services)
-3. [License](#license)
+1. [Descripción](#descripción)
+2. [Servicios](#servicios)
+3. [Despliegue](#despliegue)
+	1. [Configuración de la aplicación](#configuración-de-la-aplicación)
+	2. [Creación de la aplicación en heroku](#creación-de-la-aplicación-en-heroku)
+	3. [Configuración de la aplicación](#configuración-de-la-aplicación)
+	4. [Desplegado de la aplicación](#desplegado-de-la-aplicación)
+4. [Licencia](#licencia)
 
 <!-- /TOC -->
 
-### Description
+### Descripción
 
 Este proyecto consiste en la creación y desplegado de un bot de telegram multiuso, especialmente centrado en el manejo de un calendario de eventos añadidos por el usuario. Su principal misión será notificar las fechas de entregas de prácticas o exámenes. Un posible borrador de las acciones que podrá llevar a cabo el bot podría ser:
 
@@ -22,15 +26,58 @@ Este proyecto consiste en la creación y desplegado de un bot de telegram multiu
 * Eliminar eventos
 * Configurar cuándo debe notificar de los eventos
 
-### Services
+### Servicios
 
 Los posibles servicios en los que se basará este bot serán:
 
-* API: [python-elegram-bot API](https://github.com/python-telegram-bot/python-telegram-bot)
+* Bot API: [python-elegram-bot API](https://github.com/python-telegram-bot/python-telegram-bot)
 * Lenguaje: [Python](https://www.python.org/) será el principal lenguaje del proyecto
-* Cloud: Será desplegado en [Azure](https://azure.microsoft.com/en-us/)
-* Base de datos: [Mysql](https://www.mysql.com/)
+* Cloud: Será desplegado en [Heroku](http://heroku.com/) por su facilidad de uso y existencia de versión gratuita.
+* Base de datos: [PostgreSQL](https://www.postgresql.org/) se utilizará como base de datos por su integración con heroku y versatilidad.
 
-### License
+### Despliegue
 
-[![license](https://img.shields.io/github/license/lulivi/bot-calendario-telegram.svg)](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
+Para el despliegue de la aplicación he utilizado heroku como ya he comentado en la sección anterior. Los pasos a seguir son los siguientes:
+
+#### Configuración de la aplicación
+
+Antes de crear la aplicación en heroku, tenemos que configurar algunas opciones para que el desplegado se realiza automáticamente.
+
+- `app.json`: Este archivo (aunque no es totalmente necesario para este despliegue simple) definirá las características de nuestra aplicación  a la hora del despliegue (por ejemplo, ejecución de scripts para la creación de la base de datos).
+- `Procfile`: El archivo que le dice a heroku qué debe ejecutar cuando se llega a la etapa de desplegado. Está compuesto por una o varias lineas indicándo qué servicios se desplegaran en la aplicación.
+
+#### Creación de la aplicación en heroku
+
+Una vez nos hemos hecho cuenta en [heroku](https://signup.heroku.com/):
+
+![Singup](./docs/img/bct-singup.png)
+
+Posteriormente, creamos una nueva app en nuestro [panel de aplicaciones](https://dashboard.heroku.com/apps):
+
+![New app](./docs/img/bct-new_app.png)
+
+Introducimos el nombre y la región en la que queremos que se ejecute:
+
+![Name and region](./docs/img/bct-select_name_region.png)
+
+#### Configuración de la aplicación
+
+Después de crear la aplicación, configuramos su conexión con github y le indicamos que queremos desplegado automático despues de pasar los tests:
+
+![Connect](./docs/img/bct-config.png)
+
+#### Desplegado de la aplicación
+
+Clicamos en el boton de desplegar de la imagen anterior y... ¡configuración terminada!
+
+En el siguiente enlace podemos encontrar el despliegue:
+
+Despliegue https://bot-calendario-telegram.herokuapp.com/
+
+Si quieres desplegar tu propia aplicación con este código:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/lulivi/bot-calendario-telegram)
+
+### Licencia
+
+Échale un vistazo a la [Licencia](https://github.com/lulivi/bot-calendario-telegram/blob/master/LICENSE)
