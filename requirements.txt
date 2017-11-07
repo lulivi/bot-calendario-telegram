@@ -1,3 +1,5 @@
+pytest
+pylama
 hug
 peewee
 gunicorn
