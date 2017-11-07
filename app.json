@@ -1,6 +1,6 @@
 {
   "name": "bot-calendario-telegram",
-  "description": "bot-calendario-telegram",
+  "description": "A telegram bot to keep every objective up to date.",
   "scripts": {
   },
   "env": {
