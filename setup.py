@@ -8,7 +8,8 @@ with open("README.md", 'r') as f:
     long_description = f.read()
 
 # requirements
-requirements = ['peewee', 'hug']
+with open('requirements.txt', 'r') as f:
+    requirements = list(filter(None, f.read().split('\n')))
 
 setup(
     name='bot-calendario-telegram',
