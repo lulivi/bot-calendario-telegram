@@ -1,4 +1,12 @@
-"""rest api reminder python module."""
+"""rest api reminder python module.
+
+Functions:
+
+* get(/)
+* get(/all)
+* get(/number)
+* get(/get/{id})
+"""
 # External imports
 import hug
 import json
