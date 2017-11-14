@@ -1,9 +1,21 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 """
-rest api reminder test python module.
-
 Tests functions from the reminder rest api.
+
+Copyright 2017, Luis Liñán (luislivilla@gmail.com)
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>
 """
 
 # External imports
@@ -12,11 +24,12 @@ import hug
 import json
 
 # Local imports
-import __init__ as init
+import context
+from settings import TESTING
 import reminder_rest_api as rest
-assert init
 
-reminder_path = None
+assert context, TESTING
+
 reminder_object = None
 
 
@@ -73,11 +86,9 @@ class ReminderTestApiTest(unittest.TestCase):
 def setUpModule():
     """Set up Module method."""
     global reminder_object
-    global reminder_path
+    global TESTING
 
-    reminder_path = '../data/test_reminder_data.json'
-
-    with open(reminder_path, 'r') as file:
+    with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
         reminder_object = json.loads(file.read())
 
 

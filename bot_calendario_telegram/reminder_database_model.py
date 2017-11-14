@@ -5,14 +5,6 @@ import peewee
 database = peewee.SqliteDatabase(None)
 
 
-class UnknownField(object):
-    """Unknown field class."""
-
-    def __init__(self, *_, **__):
-        """Default unknown field constructor."""
-        pass
-
-
 class BaseModel(peewee.Model):
     """Data base class."""
 

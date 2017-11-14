@@ -1,5 +1,7 @@
-pytest
+pytest-cov
+codecov
 pylama
 hug
 peewee
 gunicorn
+python-decouple

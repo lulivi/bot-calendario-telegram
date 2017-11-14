@@ -1,24 +1,36 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-Remainder test python module.
-
 Tests functions from Reminder Class.
+
+Copyright 2017, Luis Liñán (luislivilla@gmail.com)
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>
 """
 
 # External imports
 import unittest
-
-# Local imports
-import __init__ as init
-from reminder import Reminder
 import peewee
 import json
 import sqlite3
 import os
-assert init
 
-db_name = None
+# Local imports
+import context
+from settings import TESTING
+import reminder as rem
+assert TESTING, context
+
 reminder_object = None
 
 
@@ -91,13 +103,10 @@ class ReminderTest(unittest.TestCase):
 
 def setUpModule():
     """Set up Module method."""
-    global reminder_object, db_name
-
-    # Name of the database
-    db_name = '../data/test_reminder_database.db'
+    global reminder_object
 
     # Conexión
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(TESTING['DB_NAME'])
 
     # Cursor
     c = conn.cursor()
@@ -106,14 +115,16 @@ def setUpModule():
     c.execute("DROP TABLE IF EXISTS 'event'")
 
     # Create table
-    c.execute('''CREATE TABLE event(
+    c.execute('''
+    CREATE TABLE event(
         id INTEGER PRIMARY KEY,
         id_event varchar(255) NOT NULL UNIQUE,
         date_event datetime NOT NULL
-    );''')
+    );
+    ''')
 
     # Larger example that inserts many records at a time
-    with open('../data/test_reminder_data.json', 'r') as fp:
+    with open(TESTING['REMINDER_DATA_FILE'], 'r') as fp:
         test_data = json.load(fp)
 
     test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
@@ -129,21 +140,21 @@ def setUpModule():
     conn.close()
 
     # Create Reminder object, init it and connect to the database
-    reminder_object = Reminder()
-    reminder_object.initialize(db_name)
+    reminder_object = rem.Reminder()
+    reminder_object.initialize(TESTING['DB_NAME'])
     reminder_object.connect()
 
 
 def tearDownModule():
     """Tear down Module method."""
-    global reminder_object, db_name
+    global reminder_object
 
     # Close the database connection of reminder_object
     reminder_object.close()
 
     # Remove the testing database if it is not in memory
-    if db_name != ':memory:':
-        os.remove(db_name)
+    if TESTING['DB_NAME'] != ':memory:':
+        os.remove(TESTING['DB_NAME'])
 
 
 if __name__ == '__main__':
