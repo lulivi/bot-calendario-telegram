@@ -1,6 +1,8 @@
 # Bot Calendario de Telegram
 
-[![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram)
+[![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram) [![codecov](https://codecov.io/gh/lulivi/bot-calendario-telegram/branch/master/graph/badge.svg)](https://codecov.io/gh/lulivi/bot-calendario-telegram)
+
+
 
 ## Index
 
