@@ -12,9 +12,11 @@ import hug
 import json
 
 # Local imports
-from context import TEST_REMINDER_DATA_PATH
+import context
+from settings import TESTING
 import reminder_rest_api as rest
-assert TEST_REMINDER_DATA_PATH
+
+assert context, TESTING
 
 reminder_object = None
 
@@ -72,9 +74,9 @@ class ReminderTestApiTest(unittest.TestCase):
 def setUpModule():
     """Set up Module method."""
     global reminder_object
-    global TEST_REMINDER_DATA_PATH
+    global TESTING
 
-    with open(TEST_REMINDER_DATA_PATH, 'r') as file:
+    with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
         reminder_object = json.loads(file.read())
 
 

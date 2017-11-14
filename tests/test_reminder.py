@@ -14,10 +14,10 @@ import sqlite3
 import os
 
 # Local imports
-from context import TEST_REMINDER_DATA_PATH, TEST_DATABASE_PATH
+import context
+from settings import TESTING
 import reminder as rem
-assert TEST_REMINDER_DATA_PATH
-assert TEST_DATABASE_PATH
+assert TESTING, context
 
 reminder_object = None
 
@@ -92,10 +92,9 @@ class ReminderTest(unittest.TestCase):
 def setUpModule():
     """Set up Module method."""
     global reminder_object
-    global TEST_DATABASE_PATH
 
     # Conexión
-    conn = sqlite3.connect(TEST_DATABASE_PATH)
+    conn = sqlite3.connect(TESTING['DB_NAME'])
 
     # Cursor
     c = conn.cursor()
@@ -104,14 +103,16 @@ def setUpModule():
     c.execute("DROP TABLE IF EXISTS 'event'")
 
     # Create table
-    c.execute('''CREATE TABLE event(
+    c.execute('''
+    CREATE TABLE event(
         id INTEGER PRIMARY KEY,
         id_event varchar(255) NOT NULL UNIQUE,
         date_event datetime NOT NULL
-    );''')
+    );
+    ''')
 
     # Larger example that inserts many records at a time
-    with open(TEST_REMINDER_DATA_PATH, 'r') as fp:
+    with open(TESTING['REMINDER_DATA_FILE'], 'r') as fp:
         test_data = json.load(fp)
 
     test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
@@ -128,21 +129,20 @@ def setUpModule():
 
     # Create Reminder object, init it and connect to the database
     reminder_object = rem.Reminder()
-    reminder_object.initialize(TEST_DATABASE_PATH)
+    reminder_object.initialize(TESTING['DB_NAME'])
     reminder_object.connect()
 
 
 def tearDownModule():
     """Tear down Module method."""
     global reminder_object
-    global TEST_DATABASE_PATH
 
     # Close the database connection of reminder_object
     reminder_object.close()
 
     # Remove the testing database if it is not in memory
-    if TEST_DATABASE_PATH != ':memory:':
-        os.remove(TEST_DATABASE_PATH)
+    if TESTING['DB_NAME'] != ':memory:':
+        os.remove(TESTING['DB_NAME'])
 
 
 if __name__ == '__main__':
