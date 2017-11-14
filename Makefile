@@ -1,2 +1,2 @@
 test:
-	cd tests && pytest --pylama
+	cd tests && pytest
