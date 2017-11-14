@@ -10,10 +10,9 @@ Functions:
 # External imports
 import hug
 import json
+from __init__ import TEST_REMINDER_DATA_PATH
 
-reminder_path = '../data/test_reminder_data.json'
-
-with open(reminder_path, 'r') as file:
+with open(TEST_REMINDER_DATA_PATH, 'r') as file:
     reminder_object = json.loads(file.read())
 
 
