@@ -12,10 +12,9 @@ import hug
 import json
 
 # Local imports
-import __init__
-from __init__ import TEST_REMINDER_DATA_PATH
-from __init__ import TEST_DATABASE_PATH
+from context import TEST_REMINDER_DATA_PATH
 import reminder_rest_api as rest
+assert TEST_REMINDER_DATA_PATH
 
 reminder_object = None
 

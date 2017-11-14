@@ -8,16 +8,16 @@ Tests functions from Reminder Class.
 
 # External imports
 import unittest
-
-# Local imports
-import __init__
-from __init__ import TEST_REMINDER_DATA_PATH
-from __init__ import TEST_DATABASE_PATH
-from reminder import Reminder
 import peewee
 import json
 import sqlite3
 import os
+
+# Local imports
+from context import TEST_REMINDER_DATA_PATH, TEST_DATABASE_PATH
+import reminder as rem
+assert TEST_REMINDER_DATA_PATH
+assert TEST_DATABASE_PATH
 
 reminder_object = None
 
@@ -127,7 +127,7 @@ def setUpModule():
     conn.close()
 
     # Create Reminder object, init it and connect to the database
-    reminder_object = Reminder()
+    reminder_object = rem.Reminder()
     reminder_object.initialize(TEST_DATABASE_PATH)
     reminder_object.connect()
 
