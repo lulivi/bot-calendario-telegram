@@ -10,15 +10,15 @@ Tests functions from Reminder Class.
 import unittest
 
 # Local imports
-import __init__ as init
+import __init__
+from __init__ import TEST_REMINDER_DATA_PATH
+from __init__ import TEST_DATABASE_PATH
 from reminder import Reminder
 import peewee
 import json
 import sqlite3
 import os
-assert init
 
-db_name = None
 reminder_object = None
 
 
@@ -91,13 +91,11 @@ class ReminderTest(unittest.TestCase):
 
 def setUpModule():
     """Set up Module method."""
-    global reminder_object, db_name
-
-    # Name of the database
-    db_name = '../data/test_reminder_database.db'
+    global reminder_object
+    global TEST_DATABASE_PATH
 
     # Conexión
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(TEST_DATABASE_PATH)
 
     # Cursor
     c = conn.cursor()
@@ -113,7 +111,7 @@ def setUpModule():
     );''')
 
     # Larger example that inserts many records at a time
-    with open('../data/test_reminder_data.json', 'r') as fp:
+    with open(TEST_REMINDER_DATA_PATH, 'r') as fp:
         test_data = json.load(fp)
 
     test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
@@ -130,20 +128,21 @@ def setUpModule():
 
     # Create Reminder object, init it and connect to the database
     reminder_object = Reminder()
-    reminder_object.initialize(db_name)
+    reminder_object.initialize(TEST_DATABASE_PATH)
     reminder_object.connect()
 
 
 def tearDownModule():
     """Tear down Module method."""
-    global reminder_object, db_name
+    global reminder_object
+    global TEST_DATABASE_PATH
 
     # Close the database connection of reminder_object
     reminder_object.close()
 
     # Remove the testing database if it is not in memory
-    if db_name != ':memory:':
-        os.remove(db_name)
+    if TEST_DATABASE_PATH != ':memory:':
+        os.remove(TEST_DATABASE_PATH)
 
 
 if __name__ == '__main__':
