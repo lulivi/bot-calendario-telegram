@@ -1,0 +1,6 @@
+[run]
+source = bot_calendario_telegram
+omit =
+    bot_calendario_telegram/settings.py
+    */__init__.py
+    setup.py

@@ -1,6 +1,7 @@
 pytest-cov
-coverage
+codecov
 pylama
 hug
 peewee
 gunicorn
+python-decouple
