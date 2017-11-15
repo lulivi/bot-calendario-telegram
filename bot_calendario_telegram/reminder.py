@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 """
 
 # External imports
-import reminder_database_model as db_model
+import bot_calendario_telegram.reminder_database_model as db_model
 import peewee
 
 

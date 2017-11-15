@@ -16,12 +16,13 @@ PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 """
+
 # External imports
 import hug
 import json
-from __init__ import TEST_REMINDER_DATA_PATH
+from bot_calendario_telegram.settings import TESTING
 
-with open(TEST_REMINDER_DATA_PATH, 'r') as file:
+with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
     reminder_object = json.loads(file.read())
 
 

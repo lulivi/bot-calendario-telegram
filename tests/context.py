@@ -24,4 +24,4 @@ import os
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # For finding modules to test
-sys.path.insert(0, project_root + '/bot_calendario_telegram')
+sys.path.insert(0, project_root)

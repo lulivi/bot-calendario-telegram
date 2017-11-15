@@ -27,8 +27,8 @@ import os
 
 # Local imports
 import context
-from settings import TESTING
-import reminder as rem
+from bot_calendario_telegram.settings import TESTING
+import bot_calendario_telegram.reminder as rem
 assert TESTING, context
 
 reminder_object = None

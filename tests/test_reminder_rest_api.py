@@ -25,8 +25,8 @@ import json
 
 # Local imports
 import context
-from settings import TESTING
-import reminder_rest_api as rest
+from bot_calendario_telegram.settings import TESTING
+import bot_calendario_telegram.reminder_rest_api as rest
 
 assert context, TESTING
 
