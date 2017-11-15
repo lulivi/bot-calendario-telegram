@@ -61,6 +61,10 @@ class ReminderTest(unittest.TestCase):
         result = reminder_object.delete_event('test_event')
         self.assertEqual(result, 1, 'Not one row deleted')
 
+        # Try to delete inexistent event
+        result = reminder_object.delete_event('non_existent_event')
+        self.assertEqual(result, 0, 'Should not delete nothing')
+
     def test_get_event(self):
         """Check if it returns a correct event."""
         # Test existing event

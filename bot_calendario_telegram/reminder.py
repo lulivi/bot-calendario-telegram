@@ -110,14 +110,11 @@ class Reminder(object):
 
         * result - Number of rows updated (should be 1)
         """
-        try:
-            update = db_model.Event.update(date_event=new_date_event).where(
-                db_model.Event.id_event == id_event)
-            result = update.execute()
-        except Exception as e:
-            raise
-        else:
-            return result
+        update = db_model.Event.update(date_event=new_date_event).where(
+            db_model.Event.id_event == id_event)
+        result = update.execute()
+
+        return result
 
     # === Delete event ===
     def delete_event(self, id_event):
@@ -134,13 +131,10 @@ class Reminder(object):
 
         * result - Number of rows deleted (should be 1)
         """
-        try:
-            result = db_model.Event.delete().where(
-                db_model.Event.id_event == id_event).execute()
-        except Exception as e:
-            raise
-        else:
-            return result
+        result = db_model.Event.delete().where(
+            db_model.Event.id_event == id_event).execute()
+
+        return result
 
     # === Get event ===
     def get_event(self, id_event):
@@ -157,16 +151,13 @@ class Reminder(object):
 
         * selected - Dictionary of id_event: date_event as key: value
         """
-        try:
-            selected = {
-                id_event: date_event
-                for id, id_event, date_event in db_model.Event.select()
-                .where(db_model.Event.id_event == id_event).tuples()
-            }
-        except Exception as e:
-            raise
-        else:
-            return selected
+        selected = {
+            id_event: date_event
+            for id, id_event, date_event in db_model.Event.select()
+            .where(db_model.Event.id_event == id_event).tuples()
+        }
+
+        return selected
 
     # === Next event ===
     def next_event(self):
@@ -179,16 +170,13 @@ class Reminder(object):
 
         * selected - Dictionary of id_event: date_event as key: value
         """
-        try:
-            selected = {
-                id_event: date_event
-                for id, id_event, date_event in db_model.Event.select()
-                .order_by(db_model.Event.date_event).limit(1).tuples()
-            }
-        except Exception as e:
-            raise
-        else:
-            return selected
+        selected = {
+            id_event: date_event
+            for id, id_event, date_event in db_model.Event.select()
+            .order_by(db_model.Event.date_event).limit(1).tuples()
+        }
+
+        return selected
 
     # === Get all events ====
     def get_all_events(self):
@@ -202,13 +190,10 @@ class Reminder(object):
         * events - Dictionaries of id_event: date_event as key: value for each
         event
         """
-        try:
-            events = {
-                id_event: date_event
-                for id, id_event, date_event in db_model.Event.select()
-                .order_by(db_model.Event.date_event).tuples()
-            }
-        except Exception as e:
-            raise
-        else:
-            return events
+        events = {
+            id_event: date_event
+            for id, id_event, date_event in db_model.Event.select()
+            .order_by(db_model.Event.date_event).tuples()
+        }
+
+        return events
