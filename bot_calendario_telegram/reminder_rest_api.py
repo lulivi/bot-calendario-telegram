@@ -20,7 +20,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 # External imports
 import hug
 import json
+import context
 from bot_calendario_telegram.settings import TESTING
+
+assert context
+
 
 with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
     reminder_object = json.loads(file.read())
@@ -29,6 +33,13 @@ with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
 # === Get `/` ===
 @hug.get('/')
 def index():
+    """Return web status."""
+    return {'status': 'OK'}
+
+
+# === Get `/status` ===
+@hug.get('/status')
+def status():
     """Return web status."""
     return {'status': 'OK'}
 
