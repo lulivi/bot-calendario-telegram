@@ -10,12 +10,13 @@
 
 1. [Descripción](#descripción)
 2. [Servicios](#servicios)
-3. [Despliegue](#despliegue)
+3. [Despliegue en Heroku](#despliegue-en-heroku)
 	1. [Configuración de la aplicación](#configuración-de-la-aplicación)
 	2. [Creación de la aplicación en heroku](#creación-de-la-aplicación-en-heroku)
 	3. [Configuración de la aplicación](#configuración-de-la-aplicación)
 	4. [Desplegado de la aplicación](#desplegado-de-la-aplicación)
-4. [Licencia](#licencia)
+4. [Despliegue con Docker en Zeit](#despliegue-con-docker-en-zeit)
+5. [Licencia](#licencia)
 
 <!-- /TOC -->
 
@@ -109,6 +110,8 @@ Y finalmente utilizar la herramienta de Zeit ([now](https://zeit.co/download#com
 El despliegue del contenedor se puede encontrar en la siguiente URL de Zeit:
 
 Contenedor: https://bot-calendario-telegram-xfalnttusx.now.sh
+
+DockerHub snapshot:
 
 ### Licencia
 
