@@ -111,13 +111,9 @@ El despliegue del contenedor se puede encontrar en la siguiente URL de Zeit:
 
 Contenedor: https://bot-calendario-telegram-xfalnttusx.now.sh
 
-<<<<<<< HEAD
 La snapshot se puede encontrar en DockerHub:
 
 DockerHub snapshot: https://hub.docker.com/r/lulivi/bot-calendario-telegram/
-=======
-DockerHub snapshot:
->>>>>>> 27c854a963ae6956e137319985aaeb5cdc92497e
 
 ### Licencia
 
