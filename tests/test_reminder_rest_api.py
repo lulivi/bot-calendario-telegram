@@ -45,6 +45,14 @@ class ReminderTestApiTest(unittest.TestCase):
         self.assertEqual(result_status, '200 OK', 'Not expected result')
         self.assertEqual(result_data, {'status': 'OK'}, 'Not expected result')
 
+    def test_status(self):
+        """Check if the root path of the application returns status ok."""
+        result_status = hug.test.get(rest, '/status').status
+        result_data = hug.test.get(rest, '/status').data
+
+        self.assertEqual(result_status, '200 OK', 'Not expected result')
+        self.assertEqual(result_data, {'status': 'OK'}, 'Not expected result')
+
     def test_get_all(self):
         """Check if returns all events."""
         result_status = hug.test.get(rest, '/all').status
