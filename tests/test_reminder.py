@@ -27,11 +27,9 @@ import os
 
 # Local imports
 import context
-from bot_calendario_telegram.settings import TESTING
+from bot_calendario_telegram.settings import TESTING_VARS
 import bot_calendario_telegram.reminder as rem
-assert TESTING, context
-
-reminder_object = None
+assert TESTING_VARS, context
 
 
 # === Clase test ===
@@ -110,7 +108,7 @@ def setUpModule():
     global reminder_object
 
     # Conexión
-    conn = sqlite3.connect(TESTING['DB_NAME'])
+    conn = sqlite3.connect(TESTING_VARS['DB_NAME'])
 
     # Cursor
     c = conn.cursor()
@@ -128,7 +126,7 @@ def setUpModule():
     ''')
 
     # Larger example that inserts many records at a time
-    with open(TESTING['REMINDER_DATA_FILE'], 'r') as fp:
+    with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as fp:
         test_data = json.load(fp)
 
     test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
@@ -145,7 +143,7 @@ def setUpModule():
 
     # Create Reminder object, init it and connect to the database
     reminder_object = rem.Reminder()
-    reminder_object.initialize(TESTING['DB_NAME'])
+    reminder_object.initialize(TESTING_VARS['DB_NAME'])
     reminder_object.connect()
 
 
@@ -157,8 +155,8 @@ def tearDownModule():
     reminder_object.close()
 
     # Remove the testing database if it is not in memory
-    if TESTING['DB_NAME'] != ':memory:':
-        os.remove(TESTING['DB_NAME'])
+    if TESTING_VARS['DB_NAME'] != ':memory:':
+        os.remove(TESTING_VARS['DB_NAME'])
 
 
 if __name__ == '__main__':

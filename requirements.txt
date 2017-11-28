@@ -1,6 +1,3 @@
-pytest-cov
-codecov
-pylama
 hug
 peewee
 gunicorn

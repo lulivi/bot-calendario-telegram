@@ -18,10 +18,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 """
 
 import os
-from decouple import config
+# from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TESTING = {
+TESTING_VARS = {
     'REMINDER_DATA_FILE': BASE_DIR + '/data/test_reminder_data.json',
     'DB_NAME': BASE_DIR + '/data/test_reminder_database.db'
 }

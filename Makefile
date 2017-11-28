@@ -1,5 +1,5 @@
 test:
-	pytest -v --pylama --cov-report term-missing --cov=bot_calendario_telegram tests/
+	python setup.py test
 
 
 clean:

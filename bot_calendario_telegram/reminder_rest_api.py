@@ -21,12 +21,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 import hug
 import json
 import context
-from bot_calendario_telegram.settings import TESTING
+from bot_calendario_telegram.settings import TESTING_VARS
 
 assert context
 
 
-with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
+with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as file:
     reminder_object = json.loads(file.read())
 
 

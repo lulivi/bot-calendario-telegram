@@ -25,12 +25,10 @@ import json
 
 # Local imports
 import context
-from bot_calendario_telegram.settings import TESTING
+from bot_calendario_telegram.settings import TESTING_VARS
 import bot_calendario_telegram.reminder_rest_api as rest
 
-assert context, TESTING
-
-reminder_object = None
+assert context, TESTING_VARS
 
 
 # === Clase test ===
@@ -94,9 +92,9 @@ class ReminderTestApiTest(unittest.TestCase):
 def setUpModule():
     """Set up Module method."""
     global reminder_object
-    global TESTING
+    global TESTING_VARS
 
-    with open(TESTING['REMINDER_DATA_FILE'], 'r') as file:
+    with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as file:
         reminder_object = json.loads(file.read())
 
 
