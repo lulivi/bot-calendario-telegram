@@ -1,5 +1,4 @@
 hug
 peewee
 gunicorn
-codecov
 python-decouple

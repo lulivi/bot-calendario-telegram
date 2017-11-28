@@ -12,4 +12,5 @@ script:
   - make test
 
 after_success:
+  - pip install codecov
   - codecov
