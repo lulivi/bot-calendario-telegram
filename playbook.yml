@@ -1,0 +1,14 @@
+- hosts: all
+  remote_user: vagrant
+  vars_files:
+    - var.yml
+  gather_facts: no
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Instalar paquetes
+      apt: pkg={{ item }} update-cache=yes cache_valid_time=3600
+      with_items: "{{ system_packages }}"
+
+    - name: Actualizar sistema
+      command: apt-get update
