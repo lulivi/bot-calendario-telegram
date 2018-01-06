@@ -17,15 +17,7 @@ PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 """
-from fabric.api import run
-
-
-def InstallApp():
-    # Download the repository
-    run('git clone https://github.com/lulivi/bot-calendario-telegram.git')
-
-    # Install the app requirements
-    run('cd bot-calendario-telegram/ && pip3 install -r requirements.txt')
+from fabric.api import cd, run, sudo
 
 
 def RemoveApp():
@@ -33,7 +25,17 @@ def RemoveApp():
     run('sudo rm -rf ./bot-calendario-telegram')
 
 
+def InstallApp():
+    RemoveApp()
+    # Download the repository
+    run('git clone https://github.com/lulivi/bot-calendario-telegram.git')
+
+    # Install the app requirements
+    run('cd bot-calendario-telegram/ && pip install -r requirements.txt')
+
+
 def StartApp():
     # Start web service
-    run('cd bot_calendario_telegram/ && hug -p 80 -f reminder_rest_api.py',
-        pty=False)
+    with cd('bot-calendario-telegram'):
+        with cd('bot_calendario_telegram'):
+            sudo('hug -p 80 -f reminder_rest_api.py')
