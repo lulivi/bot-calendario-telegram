@@ -6,9 +6,12 @@
   become: yes
   become_method: sudo
   tasks:
-    - name: Instalar paquetes
+    - name: Instalar paquetes base
       apt: pkg={{ item }} update-cache=yes cache_valid_time=3600
       with_items: "{{ system_packages }}"
+
+    - name: Descargar repositorio
+      git: repo={{project_repo}} dest={{proyect_path}} clone=yes force=yes
 
     - name: Actualizar sistema
       command: apt-get update
