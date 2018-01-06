@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram) [![codecov](https://codecov.io/gh/lulivi/bot-calendario-telegram/branch/master/graph/badge.svg)](https://codecov.io/gh/lulivi/bot-calendario-telegram)
 
-
-
 ## Index
 
 <!-- TOC depthFrom:3 depthTo:6 withLinks:1 updateOnSave:1 orderedList:1 -->
@@ -16,7 +14,8 @@
 	3. [Configuración de la aplicación](#configuración-de-la-aplicación)
 	4. [Desplegado de la aplicación](#desplegado-de-la-aplicación)
 4. [Despliegue con Docker en Zeit](#despliegue-con-docker-en-zeit)
-5. [Licencia](#licencia)
+5. [Despliegue con una máqina virtual en Azure](#despliegue-con-una-máqina-virtual-en-azure)
+6. [Licencia](#licencia)
 
 <!-- /TOC -->
 
@@ -53,21 +52,21 @@ Antes de crear la aplicación en heroku, tenemos que configurar algunas opciones
 
 Una vez nos hemos hecho cuenta en [heroku](https://signup.heroku.com/):
 
-![Singup](./docs/img/bct-singup.png)
+![](./docs/img/bct-heroku-deploy-singup.png "Singup")
 
 Posteriormente, creamos una nueva app en nuestro [panel de aplicaciones](https://dashboard.heroku.com/apps):
 
-![New app](./docs/img/bct-new_app.png)
+![](./docs/img/bct-heroku-deploy-new_app.png "New app")
 
 Introducimos el nombre y la región en la que queremos que se ejecute:
 
-![Name and region](./docs/img/bct-select_name_region.png)
+![](./docs/img/bct-heroku-deploy-select_name_region.png "Name and region")
 
 #### Configuración de la aplicación
 
 Después de crear la aplicación, configuramos su conexión con github y le indicamos que queremos desplegado automático despues de pasar los tests:
 
-![Connect](./docs/img/bct-config.png)
+![](./docs/img/bct-heroku-deploy-config.png "Connect")
 
 #### Desplegado de la aplicación
 
@@ -114,6 +113,133 @@ Contenedor: https://bot-calendario-telegram-xfalnttusx.now.sh
 La snapshot se puede encontrar en DockerHub:
 
 DockerHub snapshot: https://hub.docker.com/r/lulivi/bot-calendario-telegram/
+
+### Despliegue con una máqina virtual en Azure
+
+La cuenta de azure la he obtenido de una clave que me proporcionó el profesor. Una vez registrados en [Azure](https://azure.microsoft.com/en-us/), instalamos un cliente de azure (yo he elegido el de python):
+
+```bash
+sudo npm install -g azure-cli
+```
+
+Una vez instalada la herramienta debemos reiniciar el equipo para que podamos usarla. Una vez reiniciado, ejecutamos:
+
+```bash
+azure login
+```
+
+Y nos mandará abrir un enlace y pegar el código de inicio de sesión con el cliente:
+
+![](./docs/img/btc-azure-deploy-cli_login_browser.png "Azure cli login in browser")
+
+![](./docs/img/btc-azure-deploy-cli_login_terminal.png "Azure cli login in terminal")
+
+Para aprovisionar las máquinas de azure, utilizaré [vagrant](https://www.vagrantup.com/) con su plugin de [vagrant-azure](https://github.com/Azure/vagrant-azure) que veremos más adelante. Ahora, realizamos la configuración de credenciales para conectarnos con azure siguiendo la siguiente guía [configuración de credenciales con azure](https://unindented.org/articles/provision-azure-boxes-with-vagrant/).
+
+Entramosen modo asm (service management):
+
+```bash
+azure config mode asm
+```
+
+Ejecutamos el comando siguiente para poder crear nuestras credenciales:
+
+```bash
+azure account download
+```
+
+E importamos las credenciales descargadas (si no se nos lanza el buscador, copiamos y pegamos la url que aparece con el comando anterior en el), las importamos con:
+
+```bash
+azure account import /path/to/download/*.publishsettings
+```
+
+Una vez importadas las credenciales, las borramos y ejecutamos los siguientes comandos para su configuración:
+
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+-keyout ~/.ssh/azurevagrant.key -out ~/.ssh/azurevagrant.key
+
+chmod 600 ~/.ssh/azurevagrant.key
+
+openssl x509 -inform pem -in ~/.ssh/azurevagrant.key -outform der -out ~/.ssh/azurevagrant.cer
+```
+
+Una vez configuradas, subimos el archivo .cert a Azure (Suscriptions > <Suscripción activa> > Management certificates > Upload). Ahora, creamos la aplicación y le damos permisos de colaborador (nos ahorrará muchos quebraderos de cabeza).
+
+Nos dirigimos a `Azure Active Directory > App registrations > New Application registration`
+![](./docs/img/btc-azure-deploy-portal-app_registration.png)
+
+Despues en `Subscriptions > <Active Azure Pass> > Access control (IAM) > Add` añadimos a nuestra aplicación y a nosotros como colaboradores
+![](./docs/img/btc-azure-deploy-portal-ownership.png)
+
+Vamos a utilizar Vagrant para la creación de la máquina virtual donde se encontrará nuestra aplicación. Para instalarlo, usamos los repositorios oficiales:
+
+```bash
+sudo pacman -S vagrant
+```
+
+Instalamos el plugin de azure para vagrant:
+
+```bash
+vagrant plugin install vagrant-azure
+```
+
+Tras la instalación, necesitamos las claves de nuestra aplicación para nuestro `Vagrantfile`. Se puede obtener como dice la [guía de Azure](https://docs.microsoft.com/es-es/azure/azure-resource-manager/resource-group-create-service-principal-portal):
+
+El ID de la aplicación en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Application ID`
+![](./docs/img/btc-azure-deploy-portal-app_id.png "AZURE_CLIENT_ID")
+
+La contraseña de la aplicación en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Settings > API ACCESS - Keys > Password` creando una
+![](./docs/img/btc-azure-deploy-portal-app_key.png "AZURE_CLIENT_SECRET")
+
+La ID del directorio donde se encuentra la aplicación `Azure Active Directory > Properties > Directory ID`
+![](./docs/img/btc-azure-deploy-portal-directory_id.png "AZURE_TENANT_ID")
+
+La ID de la subscripción activa en `Suscriptions > <Active Azure Pass> > Suscription ID`
+![](./docs/img/btc-azure-deploy-portal-suscription_id.png "AZURE_SUBSCRIPTION_ID")
+
+Para aprovisionar nuestra máquina, voy a usar un software que lo hace automáticamente tras la ejecución de vagrant. Éste es [ansible](https://www.ansible.com/). Se instala desde los repositorios oficiales, como vagrant:
+
+```bash
+sudo pacman -S ansible
+```
+
+Ahora creamos los archivos [var.yml](./provisioning/var.yml) y [playbook.yml](./provisioning/playbook.yml) necesarios para ansible.
+
+Despues de completar el archivo [Vagrantfile](./vagrantfile) subimos la maquina:
+
+```bash
+vagrant up --provider=azure
+```
+
+Si se quisiera reaprovisionar la máquina virtual una vez ya se ha creado, se puede ejecutar el siguiente comando:
+
+```bash
+vagrant provision
+```
+
+Una vez se ha creada y aprovisionada la máquina con éxito, debemos abrir el puerto 80 de nuestra aplicación.
+
+Nos dirigimos a `Virtual machines > <nuestra máquina> > Networking > INBOUND PORT RULES > Add inbound`
+![](./docs/img/btc-azure-deploy-portal-vm-open_port.png "Open port 80")
+
+Finalmente, para poder desplegar nuestra aplicación con éxito, necesitamos una herramienta de despliegue. Yo voy a utilizar [fabric](https://github.com/mathiasertl/fabric/) y se instala desde pip:
+
+```bash
+pip install --user fabric3
+```
+
+Una vez creamos el archivo [fabfile](./deployment/fabfile.py), lo ejecutamos con los siguientes comandos para realizar el despliegue/ejecución exitosamente:
+
+```bash
+fab -H vagrant@bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com InstallApp
+fab -H vagrant@bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com StartApp
+```
+
+Para la comodidad de despliegue completo de la aplicación, se puede usar un [script](./scripts/provisioning.sh).
+
+Despliegue final: http://bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com/
 
 ### Licencia
 
