@@ -21,11 +21,12 @@ from fabric.api import cd, run, sudo
 
 
 def RemoveApp():
-    # Delete the repository
+    """Delete the app."""
     run('sudo rm -rf ./bot-calendario-telegram')
 
 
 def InstallApp():
+    """Performa clean instllation of the app."""
     RemoveApp()
     # Download the repository
     run('git clone https://github.com/lulivi/bot-calendario-telegram.git')
@@ -35,7 +36,7 @@ def InstallApp():
 
 
 def StartApp():
-    # Start web service
+    """Run the app."""
     with cd('bot-calendario-telegram'):
         with cd('bot_calendario_telegram'):
             sudo('hug -p 80 -f reminder_rest_api.py')
