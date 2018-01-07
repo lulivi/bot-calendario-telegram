@@ -239,7 +239,7 @@ fab -H vagrant@bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com Star
 
 Para la comodidad de despliegue completo de la aplicación, se puede usar un [script](./scripts/provisioning.sh).
 
-Despliegue final: http://bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com/
+Despliegue final: bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com
 
 ### Licencia
 
