@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/lulivi/bot-calendario-telegram.svg?branch=master)](https://travis-ci.org/lulivi/bot-calendario-telegram) [![codecov](https://codecov.io/gh/lulivi/bot-calendario-telegram/branch/master/graph/badge.svg)](https://codecov.io/gh/lulivi/bot-calendario-telegram)
 
-## Index
+## Índice
 
-<!-- TOC depthFrom:3 depthTo:6 withLinks:1 updateOnSave:1 orderedList:1 -->
+<!-- TOC depthFrom:3 depthTo:6 withLinks:1 updateOnSave:0 orderedList:1 -->
 
 1. [Descripción](#descripción)
 2. [Servicios](#servicios)
@@ -26,14 +26,14 @@ Este proyecto consiste en la creación y desplegado de un bot de telegram multiu
 * Añadir nuevos eventos
 * Modificar eventos
 * Eliminar eventos
-* Configurar cuándo debe notificar de los eventos
+* Configurar cuándo deben notificar de los eventos
 
 ### Servicios
 
 Los posibles servicios en los que se basará este bot serán:
 
 * Bot API: [python-elegram-bot API](https://github.com/python-telegram-bot/python-telegram-bot)
-* Lenguaje: [Python](https://www.python.org/) será el principal lenguaje del proyecto
+* Lenguaje: [Python](https://www.python.org/) será el principal lenguaje del proyecto.
 * Cloud: Será desplegado en [Heroku](http://heroku.com/) por su facilidad de uso y existencia de versión gratuita.
 * Base de datos: [PostgreSQL](https://www.postgresql.org/) se utilizará como base de datos por su integración con heroku y versatilidad.
 
