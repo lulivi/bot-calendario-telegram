@@ -12,7 +12,7 @@ TESTING_VARS = {
 
 REMINDER_REST_API_PORT = config('REMINDER_REST_API_PORT', default=8000, cast=int)
 
-HEROKU_PG_DATABASE_URL = config('DATABASE_URL', default=None, cast=str)
+HEROKU_PG_DATABASE_URL = config('DATABASE_URL', default=None)
 
 NEXTCLOUD_MIDLEWARE_URL = 'https://middleware-nextcloud.herokuapp.com/'
 

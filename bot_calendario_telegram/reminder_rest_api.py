@@ -121,11 +121,12 @@ def initialize_database_manager():
         # Create table
         c.execute('DROP TABLE IF EXISTS \'event_reminder\'')
         c.execute('CREATE TABLE event_reminder(id INTEGER PRIMARY KEY, \
-    event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime NOT NULL);'
+            event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime \
+            NOT NULL);'
                   )
         # Insert the test data into the database
         c.executemany('INSERT INTO event_reminder (event_id, \
-    reminder_datetime) VALUES (?, ?)', test_data)
+            reminder_datetime) VALUES (?, ?)', test_data)
         # Save (commit) the changes and close
         conn.commit()
         conn.close()
@@ -145,7 +146,8 @@ def start_rest_api():
     except KeyboardInterrupt:
         if TESTING_VARS['DB_NAME'] != ':memory:':
             os.remove(TESTING_VARS['DB_NAME'])
-        reminder.close()
+        if reminder:
+            reminder.close()
         print('Rest api ended.')
 
 
