@@ -1,5 +1,5 @@
 hug
+psycopg2
 peewee
-gunicorn
 python-decouple
 python-telegram-bot
