@@ -1,22 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-"""
-Tests functions from Reminder Class.
-
-Copyright 2017, Luis Liñán (luislivilla@gmail.com)
-
-This program is free software: you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation, version 3.
-
-This program is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>
-"""
+"""Tests functions from Reminder Class."""
 
 # External imports
 import unittest
@@ -29,7 +12,7 @@ import os
 import context
 from bot_calendario_telegram.settings import TESTING_VARS
 import bot_calendario_telegram.reminder as rem
-assert TESTING_VARS, context
+assert context
 
 
 # === Clase test ===
@@ -46,8 +29,10 @@ class ReminderTest(unittest.TestCase):
                                                      '2049/01/01 00:00:00')
 
         # Check if the returning of the inserti is the event in essence
-        self.assertEqual(result_insert, {'test_event': '2000/01/01 00:00:00'},
-                         'Not the correct return')
+        self.assertEqual(result_insert, {
+            'event_id': 'test_event',
+            'reminder_datetime': '2000/01/01 00:00:00'
+        }, 'Not the correct return')
         # Check if there was one line updated
         self.assertEqual(result_update, 1, 'No event updated')
 
@@ -65,85 +50,77 @@ class ReminderTest(unittest.TestCase):
 
     def test_get_event(self):
         """Check if it returns a correct event."""
+        event_id_1 = list(
+            filter(lambda x: x.get('event_id') == '1', reminder_test_data))[0]
+
         # Test existing event
         result = reminder_object.get_event('1')
+
         # Test non existing event
         retult_2 = reminder_object.get_event('non_existent_event')
 
         # Check if it returns the expected event
-        self.assertEqual(result, {'1': '2017/10/18 12:30'},
+        self.assertEqual(result, event_id_1,
                          'Didn\'t return the correct event')
         # Check if it returns an empty dictionary
         self.assertEqual(retult_2, {}, 'Non existent event is not empty')
 
     def test_next_event(self):
         """Check if the next event is the first on a sorted list."""
+        next_event_test = list(
+            filter(lambda x: x.get('event_id') == '4', reminder_test_data))[0]
+
         # Test next event
         result = reminder_object.next_event()
 
         # Should return the next event order by date
-        self.assertEqual(result, {'4': '2016/03/25 16:45'}, 'Incorrect output')
+        self.assertEqual(result, next_event_test, 'Incorrect output')
 
     def test_get_all_events(self):
         """Check if there are any exceptions in the select."""
-        # The expected output
-        all_events_json = {
-            "4": "2016/03/25 16:45",
-            "5": "2017/10/05 10:40",
-            "1": "2017/10/18 12:30",
-            "2": "2017/10/20 14:15",
-            "3": "2017/10/25 16:45"
-        }
-
         # Test get all events
         result = reminder_object.get_all_events()
 
         # Should return the same as `all_events_json`
-        self.assertEqual(result, all_events_json,
+        self.assertEqual(result,
+                         sorted(
+                             reminder_test_data,
+                             key=lambda x: x.get('reminder_datetime')),
                          'Date sorting is not correct')
 
 
 def setUpModule():
     """Set up Module method."""
     global reminder_object
+    global reminder_test_data
+    global TESTING_VARS
 
-    # Conexión
+    with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as f:
+        reminder_test_data = json.loads(f.read()).get('event_reminder')
+
+    test_data = [(k['event_id'], k['reminder_datetime'])
+                 for k in reminder_test_data]
+
+    # Createconnection and connect
     conn = sqlite3.connect(TESTING_VARS['DB_NAME'])
-
-    # Cursor
     c = conn.cursor()
-
-    # Drop table if already exists
-    c.execute("DROP TABLE IF EXISTS 'event'")
-
     # Create table
-    c.execute('''
-    CREATE TABLE event(
-        id INTEGER PRIMARY KEY,
-        id_event varchar(255) NOT NULL UNIQUE,
-        date_event datetime NOT NULL
-    );
-    ''')
-
-    # Larger example that inserts many records at a time
-    with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as fp:
-        test_data = json.load(fp)
-
-    test_data = [(k['id_event'], k['date_event']) for k in test_data['event']]
-
+    c.execute('DROP TABLE IF EXISTS \'event_reminder\'')
+    c.execute('CREATE TABLE event_reminder(id INTEGER PRIMARY KEY, \
+event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime NOT NULL);')
     # Insert the test data into the database
-    c.executemany('INSERT INTO event (id_event, date_event) VALUES (?, ?)',
-                  test_data)
-
-    # Save (commit) the changes
+    c.executemany('INSERT INTO event_reminder (event_id, \
+reminder_datetime) VALUES (?, ?)', test_data)
+    # Save (commit) the changes and close
     conn.commit()
-
-    # Close the connection if everything is done
     conn.close()
+
+    # Create the database object
+    database = peewee.SqliteDatabase(TESTING_VARS['DB_NAME'])
 
     # Create Reminder object, init it and connect to the database
     reminder_object = rem.Reminder()
-    reminder_object.initialize(TESTING_VARS['DB_NAME'])
+    reminder_object.initialize(database)
     reminder_object.connect()
 
 
