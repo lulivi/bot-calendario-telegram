@@ -103,7 +103,7 @@ def initialize_database_manager():
 
         # Create the database object
         database = peewee.PostgresqlDatabase(
-            db_name=db_url.path[1:],
+            db_url.path[1:],
             user=db_url.username,
             password=db_url.password,
             host=db_url.hostname,
