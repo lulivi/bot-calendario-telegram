@@ -10,7 +10,7 @@ TESTING_VARS = {
     'DB_NAME': BASE_DIR + '/data/test_reminder_database.db'
 }
 
-REMINDER_REST_API_PORT = config('REMINDER_REST_API_PORT', default=8000, cast=int)
+REMINDER_REST_API_PORT = config('PORT', default=8000, cast=int)
 
 HEROKU_PG_DATABASE_URL = config('DATABASE_URL', default=None)
 
