@@ -2,3 +2,4 @@ hug
 peewee
 gunicorn
 python-decouple
+python-telegram-bot
