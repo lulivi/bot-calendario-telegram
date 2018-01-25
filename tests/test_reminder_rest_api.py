@@ -6,7 +6,6 @@ import unittest
 import hug
 import json
 import peewee
-import sqlite3
 import os
 
 # Local imports
@@ -133,42 +132,8 @@ def setUpModule():
     with open(TESTING_VARS['REMINDER_DATA_FILE'], 'r') as f:
         reminder_test_data = json.loads(f.read()).get('event_reminder')
 
-    # Conexión
-    conn = sqlite3.connect(TESTING_VARS['DB_NAME'])
-
-    # Cursor
-    c = conn.cursor()
-
-    # Drop table if already exists
-    c.execute('DROP TABLE IF EXISTS \'event_reminder\'')
-
-    # Create table
-    c.execute('''
-    CREATE TABLE event_reminder(
-        id INTEGER PRIMARY KEY,
-        event_id varchar(255) NOT NULL UNIQUE,
-        reminder_datetime datetime NOT NULL
-    );
-    ''')
-
-    test_data = [(k['event_id'], k['reminder_datetime'])
-                 for k in reminder_test_data]
-
-    # Insert the test data into the database
-    c.executemany(
-        'INSERT INTO event_reminder (event_id, reminder_datetime) VALUES \
-(?, ?)', test_data)
-
-    # Save (commit) the changes
-    conn.commit()
-
-    # Close the connection if everything is done
-    conn.close()
-
     # Initialize the object to access the database
-    database = peewee.SqliteDatabase(TESTING_VARS['DB_NAME'])
-    rest.reminder = rest.Reminder()
-    rest.reminder.initialize(database)
+    rest.initialize_database_manager()
 
 
 def tearDownModule():
