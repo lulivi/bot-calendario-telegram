@@ -91,8 +91,8 @@ def delete_event(event_id: hug.types.text):
     return reminder.delete_event(event_id=event_id)
 
 
-def main():
-    """Main program function."""
+def initialize_database_manager():
+    """Initialize the database connection."""
     global reminder
 
     # Check if we are in production or in local testing
@@ -121,10 +121,11 @@ def main():
         # Create table
         c.execute('DROP TABLE IF EXISTS \'event_reminder\'')
         c.execute('CREATE TABLE event_reminder(id INTEGER PRIMARY KEY, \
-event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime NOT NULL);')
+    event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime NOT NULL);'
+                  )
         # Insert the test data into the database
         c.executemany('INSERT INTO event_reminder (event_id, \
-reminder_datetime) VALUES (?, ?)', test_data)
+    reminder_datetime) VALUES (?, ?)', test_data)
         # Save (commit) the changes and close
         conn.commit()
         conn.close()
@@ -134,6 +135,10 @@ reminder_datetime) VALUES (?, ?)', test_data)
     reminder = Reminder()
     reminder.initialize(database)
 
+
+def start_rest_api():
+    """Main program function."""
+    initialize_database_manager()
     try:
         # Start hug web rest api
         hug.API(__name__).http.serve(REMINDER_REST_API_PORT)
@@ -145,4 +150,4 @@ reminder_datetime) VALUES (?, ?)', test_data)
 
 
 if __name__ == '__main__':
-    main()
+    start_rest_api()
