@@ -1,8 +1,8 @@
-# -*- coding: UTF-8 -*-
 """Reminder database model."""
+
 import peewee
 
-database = peewee.SqliteDatabase(None)
+database_proxy = peewee.Proxy()
 
 
 class BaseModel(peewee.Model):
@@ -11,17 +11,17 @@ class BaseModel(peewee.Model):
     class Meta:
         """Meta class for the database."""
 
-        database = database
+        database = database_proxy
 
 
-class Event(BaseModel):
-    """Model for `event` table."""
+class EventReminder(BaseModel):
+    """Model for event table."""
 
     id = peewee.PrimaryKeyField()
-    id_event = peewee.CharField()
-    date_event = peewee.DateTimeField()
+    event_id = peewee.CharField()
+    reminder_datetime = peewee.DateTimeField(formats='%Y/%m/%d %H:%M')
 
     class Meta:
-        """Meta class for `events`."""
+        """Meta class for events."""
 
-        db_table = 'event'
+        db_table = 'event_reminder'
