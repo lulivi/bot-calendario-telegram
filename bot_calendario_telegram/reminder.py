@@ -1,34 +1,18 @@
-# -*- coding: utf-8 -*-
-"""
-Interact with a databae of events.
-
-Copyright 2017, Luis Liñán (luislivilla@gmail.com)
-
-This program is free software: you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation, version 3.
-
-This program is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>
-"""
+"""Interact with a databae of events."""
 
 # External imports
+import peewee
+from urllib import parse
+
 import context
 import bot_calendario_telegram.reminder_database_model as db_model
-import peewee
 
 assert context
 
 
 # === Reminder Class ===
 class Reminder(object):
-    """
-    Checks and modifies a database.
+    """Checks and modifies a database.
 
     Methods:
 
@@ -44,46 +28,42 @@ class Reminder(object):
     """
 
     # === Initialize connection ===
-    def initialize(self, db_name):
-        """
-        Initialize the database object.
+    def initialize(self, database):
+        """Initialize the database proxy object.
 
-        Sets the database name for connecting to it later
+        Sets the database config parameters for connecting to it later
 
         Args:
 
-        * db_name - The database name
+        * database - Database object already created
         """
-        db_model.database.init(db_name)
+        db_model.database_proxy.initialize(database)
 
     # === Connect ===
     def connect(self):
-        """
-        Connect to the database.
+        """Connect to the database.
 
-        Starts the connection to perform queris to the database.
+        Starts the connection to perform queries to the database.
         """
-        db_model.database.connect()
+        db_model.database_proxy.connect()
 
     # === Close connection ===
     def close(self):
-        """
-        Close the connection.
+        """Close the connection.
 
         Closes the connection after the database use.
         """
-        db_model.database.close()
+        db_model.database_proxy.close()
 
     # === Save event ===
-    def save_event(self, id_event, date_event):
-        """
-        Save the event in the data base.
+    def save_event(self, event_id, reminder_datetime):
+        """Save the event in the data base.
 
         Performs a query sentence to save the event in the data base.
 
         Args:
 
-        * id_event - ID of the event
+        * event_id - ID of the event
         * event_date - Reminder date of the event
 
         Returns:
@@ -91,112 +71,123 @@ class Reminder(object):
         * The inserted object if everything went ok
         """
         try:
-            insertion = db_model.Event.create(
-                id_event=id_event, date_event=date_event)
+            insertion = db_model.EventReminder.create(
+                event_id=event_id, reminder_datetime=reminder_datetime)
         except peewee.IntegrityError as e:
             raise
         else:
-            return {insertion.id_event: insertion.date_event}
+            return {
+                'event_id': insertion.event_id,
+                'reminder_datetime': insertion.reminder_datetime
+            }
 
-    def update_event(self, id_event, new_date_event):
-        """
-        Update an existing event.
+    def update_event(self, event_id, new_reminder_datetime):
+        """Update an existing event.
 
         Performs an update query to to an existing event of the database
 
         Args:
 
-        * id_event - The existing event id
-        * new_date_event - The updated date
+        * event_id - The existing event id
+        * new_reminder_datetime - The updated date
 
         Returns:
 
         * result - Number of rows updated (should be 1)
         """
-        update = db_model.Event.update(date_event=new_date_event).where(
-            db_model.Event.id_event == id_event)
+        update = db_model.EventReminder.update(
+            reminder_datetime=new_reminder_datetime).where(
+                db_model.EventReminder.event_id == event_id)
         result = update.execute()
 
         return result
 
     # === Delete event ===
-    def delete_event(self, id_event):
-        """
-        Delete event from Database.
+    def delete_event(self, event_id):
+        """Delete event from Database.
 
         Performs a query sentence to remove a tuple from the database.
 
         Args:
 
-        * id_event - ID of the event
+        * event_id - ID of the event
 
         Returns:
 
         * result - Number of rows deleted (should be 1)
         """
-        result = db_model.Event.delete().where(
-            db_model.Event.id_event == id_event).execute()
+        result = db_model.EventReminder.delete().where(
+            db_model.EventReminder.event_id == event_id).execute()
 
         return result
 
     # === Get event ===
-    def get_event(self, id_event):
-        """
-        Get the event from the data base.
+    def get_event(self, event_id):
+        """Get the event from the data base.
 
         Performs a query sentence to get the event from the data base.
 
         Args:
 
-        * id_event - ID of the event
+        * event_id - ID of the event
 
         Returns:
 
-        * selected - Dictionary of id_event: date_event as key: value
+        * selected - Dictionary of event_id: reminder_datetime as key: value
         """
-        selected = {
-            id_event: date_event
-            for id, id_event, date_event in db_model.Event.select()
-            .where(db_model.Event.id_event == id_event).tuples()
-        }
+        event = db_model.EventReminder.select().where(
+            db_model.EventReminder.event_id == event_id).dicts()
 
-        return selected
+        if event:
+            result = event[0]
+            result.pop('id')
+        else:
+            result = {}
+
+        return result
 
     # === Next event ===
     def next_event(self):
-        """
-        Return nearest event.
+        """Return nearest event.
 
         Performs a query sentence to get the nearest event from the data base.
 
         Returns:
 
-        * selected - Dictionary of id_event: date_event as key: value
+        * selected - Dictionary of event_id: reminder_datetime as key: value
         """
-        selected = {
-            id_event: date_event
-            for id, id_event, date_event in db_model.Event.select()
-            .order_by(db_model.Event.date_event).limit(1).tuples()
-        }
+        next_event = db_model.EventReminder.select().order_by(
+            db_model.EventReminder.reminder_datetime).limit(1).dicts()
 
-        return selected
+        if next_event:
+            result = next_event[0]
+            result.pop('id')
+        else:
+            result = {}
+
+        return result
 
     # === Get all events ====
     def get_all_events(self):
-        """
-        Return all events sorted by date.
+        """Return all events sorted by date.
 
         Performs a query sentence to get every event from the data base.
 
         Returns:
 
-        * events - Dictionaries of id_event: date_event as key: value for each
-        event
+            events - A list of events ({'event_id': event_id,
+            'reminder_datetime': reminder_datetime})
         """
-        events = {
-            id_event: date_event
-            for id, id_event, date_event in db_model.Event.select()
-            .order_by(db_model.Event.date_event).tuples()
+        events = [{
+            'event_id': event_id,
+            'reminder_datetime': reminder_datetime
         }
+                  for id, event_id, reminder_datetime in
+                  db_model.EventReminder.select()
+                  .order_by(db_model.EventReminder.reminder_datetime).tuples()]
 
         return events
+
+    def get_all_events_count(self):
+        """Return the number of saved reminders."""
+        return db_model.EventReminder.select().count()
