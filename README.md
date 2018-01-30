@@ -187,16 +187,16 @@ vagrant plugin install vagrant-azure
 
 Tras la instalación, necesitamos las claves de nuestra aplicación para nuestro `Vagrantfile`. Se puede obtener como dice la [guía de Azure](https://docs.microsoft.com/es-es/azure/azure-resource-manager/resource-group-create-service-principal-portal):
 
-El ID de la aplicación en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Application ID`
+* El ID de la aplicación (AZURE_CLIENT_ID) en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Application ID`
 ![](./docs/img/btc-azure-deploy-portal-app_id.png "AZURE_CLIENT_ID")
 
-La contraseña de la aplicación en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Settings > API ACCESS - Keys > Password` creando una
+* La contraseña de la aplicación (AZURE_CLIENT_SECRET) en `Azure Active Directory > App registrations > <Nombre de la aplicacion> > Settings > API ACCESS - Keys > Password` creando una
 ![](./docs/img/btc-azure-deploy-portal-app_key.png "AZURE_CLIENT_SECRET")
 
-La ID del directorio donde se encuentra la aplicación `Azure Active Directory > Properties > Directory ID`
+* La ID del directorio (AZURE_TENANT_ID) donde se encuentra la aplicación `Azure Active Directory > Properties > Directory ID`
 ![](./docs/img/btc-azure-deploy-portal-directory_id.png "AZURE_TENANT_ID")
 
-La ID de la subscripción activa en `Suscriptions > <Active Azure Pass> > Suscription ID`
+* La ID de la subscripción activa (AZURE_SUBSCRIPTION_ID) en `Suscriptions > <Active Azure Pass> > Suscription ID`
 ![](./docs/img/btc-azure-deploy-portal-suscription_id.png "AZURE_SUBSCRIPTION_ID")
 
 Para aprovisionar nuestra máquina, voy a usar un software que lo hace automáticamente tras la ejecución de vagrant. Éste es [ansible](https://www.ansible.com/). Se instala desde los repositorios oficiales, como vagrant:
@@ -207,7 +207,7 @@ sudo pacman -S ansible
 
 Ahora creamos los archivos [var.yml](./provisioning/var.yml) y [playbook.yml](./provisioning/playbook.yml) necesarios para ansible.
 
-Despues de completar el archivo [Vagrantfile](./vagrantfile) subimos la maquina:
+Despues de completar el archivo [Vagrantfile](./Vagrantfile) subimos la maquina:
 
 ```bash
 vagrant up --provider=azure
