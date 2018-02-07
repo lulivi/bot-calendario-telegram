@@ -106,3 +106,6 @@ site/
 
 # vagrant
 .vagrant/
+
+# tests
+*.pytest_*
