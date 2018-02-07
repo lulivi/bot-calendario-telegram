@@ -88,23 +88,24 @@ Una vez nos hemos registrado en [Zeit](https://zeit.co/) hay dos maneras de desp
 2. [Forma rápida](https://zeit.co/docs/deployment-types/docker#accelerating-builds): Crear un Dockerfile con una snapshot de tu proyecto ya subida a [DockerHub](https://hub.docker.com)
 
 Y finalmente utilizar la herramienta de Zeit ([now](https://zeit.co/download#command-line)).
-
-	$ now --public
-	> Deploying ~/git/bot-calendario-telegram under lulivi
-	> Ready! https://bot-calendario-telegram-xfalnttusx.now.sh [9s]
-	> Synced 26 files (269.08KB) [0ms]
-	> Initializing…
-	> Building
-	> ▲ docker build
-	Sending build context to Docker daemon 344.1 kBkB
-	> Step 1 : FROM python:3.6
-	> 3.6: Pulling from library/python
-	...
-	> Successfully built 265dc9f7110a
-	> ▲ Storing image
-	> ▲ Deploying image
-	> ▲ Container started
-	> Deployment complete!
+```
+$ now --public
+> Deploying ~/git/bot-calendario-telegram under lulivi
+> Ready! https://bot-calendario-telegram-xfalnttusx.now.sh [9s]
+> Synced 26 files (269.08KB) [0ms]
+> Initializing…
+> Building
+> ▲ docker build
+Sending build context to Docker daemon 344.1 kBkB
+> Step 1 : FROM python:3.6
+> 3.6: Pulling from library/python
+...
+> Successfully built 265dc9f7110a
+> ▲ Storing image
+> ▲ Deploying image
+> ▲ Container started
+> Deployment complete!
+```
 
 El despliegue del contenedor se puede encontrar en la siguiente URL de Zeit:
 
@@ -205,7 +206,7 @@ Para aprovisionar nuestra máquina, voy a usar un software que lo hace automáti
 sudo pacman -S ansible
 ```
 
-Ahora creamos los archivos [var.yml](./provisioning/var.yml) y [playbook.yml](./provisioning/playbook.yml) necesarios para ansible.
+Ahora creamos los archivos [var.yml](./provision/var.yml) y [playbook.yml](./provision/playbook.yml) necesarios para ansible.
 
 Despues de completar el archivo [Vagrantfile](./Vagrantfile) subimos la maquina:
 
@@ -230,7 +231,7 @@ Finalmente, para poder desplegar nuestra aplicación con éxito, necesitamos una
 pip install --user fabric3
 ```
 
-Una vez creamos el archivo [fabfile](./deployment/fabfile.py), lo ejecutamos con los siguientes comandos para realizar el despliegue/ejecución exitosamente:
+Una vez creamos el archivo [fabfile](./despliegue/fabfile.py), lo ejecutamos con los siguientes comandos para realizar el despliegue/ejecución exitosamente:
 
 ```bash
 fab -H vagrant@bot-calendario-telegram-vm.southcentralus.cloudapp.azure.com InstallApp
