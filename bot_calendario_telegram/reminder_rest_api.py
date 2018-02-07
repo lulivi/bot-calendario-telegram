@@ -122,8 +122,7 @@ def initialize_database_manager():
         c.execute('DROP TABLE IF EXISTS \'event_reminder\'')
         c.execute('CREATE TABLE event_reminder(id INTEGER PRIMARY KEY, \
             event_id varchar(255) NOT NULL UNIQUE,reminder_datetime datetime \
-            NOT NULL);'
-                  )
+            NOT NULL);')
         # Insert the test data into the database
         c.executemany('INSERT INTO event_reminder (event_id, \
             reminder_datetime) VALUES (?, ?)', test_data)
@@ -142,7 +141,11 @@ def start_rest_api():
     initialize_database_manager()
     try:
         # Start hug web rest api
-        hug.API(__name__).http.serve(REMINDER_REST_API_PORT)
+        hug.API(__name__).http.serve(
+            host='0.0.0.0',
+            port=REMINDER_REST_API_PORT,
+            display_intro=False,
+        )
     except KeyboardInterrupt:
         if TESTING_VARS['DB_NAME'] != ':memory:':
             os.remove(TESTING_VARS['DB_NAME'])
